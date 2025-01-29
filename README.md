@@ -23,9 +23,6 @@ git clone https://github.com/Draggodeidad/Proyecto-Hidroponico.git
 cd Proyecto-Hidroponico
 ```
 
-```bash
-
-```
 
 ### 2. Sincroniza la Rama Principal
 
