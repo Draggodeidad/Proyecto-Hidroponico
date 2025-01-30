@@ -30,16 +30,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
-        options={{
-          title: "Inicio",
-          tabBarIcon: ({ color }) => (
-            <Entypo name="home" size={28} color="black" />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="monitoreo"
+        name="monitoreo" // archivo donde va la pantalla monitoreo.tsx
         options={{
           title: "Monitoreo",
           tabBarIcon: ({ color }) => (
@@ -48,7 +39,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="inteligenciaArtificial"
+        name="index" // index.tsx
+        options={{
+          title: "Info",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="info-circle" size={24} color="black" />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="inteligenciaArtificial" //inteligenciaArtifical.tsx
         options={{
           title: "IA",
           tabBarIcon: ({ color }) => (
@@ -57,7 +57,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="configuracion"
+        name="configuracion" //configuracion.tsx
         options={{
           title: "Configuracion",
           tabBarIcon: ({ color }) => (
