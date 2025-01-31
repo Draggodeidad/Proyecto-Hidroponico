@@ -12,14 +12,16 @@ import {
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useKeyboard } from "@react-native-community/hooks";
 
 export default function inteligenciaScreen() {
+  const keyboard = useKeyboard();
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 20}
       >
         {/* Aqui va el header */}
         <View style={styles.header}>
@@ -27,10 +29,18 @@ export default function inteligenciaScreen() {
         </View>
 
         {/* Aqui van a ir los mensajes de la conversación */}
-        <ScrollView style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={[
+            styles.scrollContent,
+            keyboard.keyboardShown && {
+              paddingBottom: keyboard.keyboardHeight,
+            },
+          ]}
+        >
           {/* Mensaje Enviado */}
           <View style={styles.messageSendContainer}>
-            <Text style={styles.bubbleSend}>Hola Mundo....</Text>
+            <Text style={styles.bubbleSend}>Hola Mundooooo....</Text>
             <FontAwesome
               name="user-circle"
               size={24}

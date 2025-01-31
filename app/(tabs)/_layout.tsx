@@ -9,12 +9,14 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { useKeyboard } from "@react-native-community/hooks";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+  const keyboard = useKeyboard();
   return (
     <Tabs
+      initialRouteName="monitoreo"
       screenOptions={{
         tabBarActiveTintColor: "#FFD700",
         tabBarInactiveTintColor: "#FFFFFF",
@@ -23,7 +25,7 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
           backgroundColor: "#235025", // Color de fondo del navbar
-          // borderTopWidth: 0,
+          display: keyboard.keyboardShown ? "none" : "flex",
         },
       }}
     >
