@@ -16,17 +16,15 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: "#FFD700",
+        tabBarInactiveTintColor: "#FFFFFF",
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: "#235025", // Color de fondo del navbar
+          // borderTopWidth: 0,
+        },
       }}
     >
       <Tabs.Screen
@@ -43,7 +41,7 @@ export default function TabLayout() {
         options={{
           title: "Info",
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="info-circle" size={24} color="black" />
+            <FontAwesome5 name="seedling" size={24} color="black" />
           ),
         }}
       />
