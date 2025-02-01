@@ -1,74 +1,120 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Text, StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native';
+import { router, useRouter } from "expo-router";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
+export default function App() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <ScrollView style={styles.container}>
+      {/**Imagen del top y el titulo de la pestaña */}
+      <View style={styles.topSection}>
+        <Image 
+          source={{uri: 'https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain'}} 
+          style={styles.topImage}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <Text style={styles.topText}>Los Diferentes tipos de cultivos</Text>
+      </View>
+      {/**Seccion de cultivos */}
+      <View style={styles.bottomSection}>
+
+        <View style={styles.cultivo}>
+        <TouchableOpacity 
+        onPress={() => router.push('/infocultivo')}
+        style={{width: '100%'}}>
+          <Image 
+            source={{
+            uri: 'https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain'}}
+            style={styles.imgCultivo}
+          />
+          <Text style={styles.title}>Lechuga 1</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.cultivo}>
+        <TouchableOpacity 
+        onPress={() => router.push('/infocultivo')}
+        style={{width: '100%'}}>
+          <Image 
+            source={{
+            uri: 'https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain'}}
+            style={styles.imgCultivo}
+          />
+          <Text style={styles.title}>Lechuga 1</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.cultivo}>
+        <TouchableOpacity 
+        onPress={() => router.push('/infocultivo')}
+        style={{width: '100%'}}>
+          <Image 
+            source={{
+            uri: 'https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain'}}
+            style={styles.imgCultivo}
+          />
+          <Text style={styles.title}>Lechuga 1</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.cultivo}>
+        <TouchableOpacity 
+        onPress={() => router.push('/infocultivo')}
+        style={{width: '100%'}}>
+          <Image 
+            source={{
+            uri: 'https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain'}}
+            style={styles.imgCultivo}
+          />
+          <Text style={styles.title}>Lechuga 1</Text>
+          </TouchableOpacity>
+        </View>
+
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  topSection: {
+    marginBottom: 20,
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  topImage: {
+    width: '100%',
+    height: 200,
+    opacity: 0.9,
+    objectFit: 'cover'
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  topText: {
+    marginTop: 10,
+    color: '#000',
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  bottomSection: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 14,
+  },
+  cultivo: {
+    width: '48%',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  imgCultivo: {
+    width: '100%',
+    height: 150,
+    borderRadius: 10,
+  },
+  title: {
+    fontSize: 16,
+    marginTop: 5,
+    paddingBottom:5,
+    color: '#000',
+    fontWeight: 'bold',
   },
 });
