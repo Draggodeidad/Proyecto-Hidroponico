@@ -7,7 +7,7 @@ export default function App() {
       <Image source={{uri: 'https://huerto-en-casa.com/wp-content/uploads/2021/08/lechuga-iceberg-cultivo-1020x680.jpg'}}
       style={styles.image}/>
       {/**Descripcion */}
-        <Text style={styles.descrip}>Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur..</Text>
+        <Text style={styles.descrip}>Lorsem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur..</Text>
       {/**Aqui va el divider */}
 
       {/**Lista de variables */}
