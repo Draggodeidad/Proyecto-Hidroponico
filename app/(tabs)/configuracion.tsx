@@ -1,7 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
-import {router} from 'expo-router';
+import { router } from "expo-router";
 import {
   View,
   Text,
@@ -64,9 +64,10 @@ export default function ConfiguracionScreen() {
         </View>
         {/* Preferencias */}
         <View style={styles.menuItemWrapper}>
-          <TouchableOpacity 
-          onPress={() => router.push('/preferencias')}
-          style={styles.menuItem}>
+          <TouchableOpacity
+            onPress={() => router.push("/Preferencias")}
+            style={styles.menuItem}
+          >
             <View style={styles.menuIconContainer}>
               <FontAwesome name="cog" size={24} color="#235025" />
             </View>
