@@ -26,7 +26,7 @@ export default function App() {
       <View style={styles.bottomSection}>
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/Infocultivos")}
+            onPress={() => router.push("/infocultivos")}
             style={{ width: "100%" }}
           >
             <Image
@@ -41,7 +41,7 @@ export default function App() {
 
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/Infocultivos")}
+            onPress={() => router.push("/infocultivos")}
             style={{ width: "100%" }}
           >
             <Image
@@ -56,7 +56,7 @@ export default function App() {
 
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/Infocultivos")}
+            onPress={() => router.push("/infocultivos")}
             style={{ width: "100%" }}
           >
             <Image
@@ -71,7 +71,7 @@ export default function App() {
 
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/Infocultivos")}
+            onPress={() => router.push("/infocultivos")}
             style={{ width: "100%" }}
           >
             <Image

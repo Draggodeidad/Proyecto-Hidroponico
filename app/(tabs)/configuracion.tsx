@@ -65,7 +65,7 @@ export default function ConfiguracionScreen() {
         {/* Preferencias */}
         <View style={styles.menuItemWrapper}>
           <TouchableOpacity
-            onPress={() => router.push("/Preferencias")}
+            onPress={() => router.push("/preferencias")}
             style={styles.menuItem}
           >
             <View style={styles.menuIconContainer}>

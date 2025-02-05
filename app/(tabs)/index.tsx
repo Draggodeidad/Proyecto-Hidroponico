@@ -12,53 +12,46 @@ import {
 import { router } from "expo-router";
 import { Toggle, ToggleProps, Input } from "@ui-kitten/components";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import database, {
-  FirebaseDatabaseTypes,
-} from "@react-native-firebase/database"; // Importar Firebase y tipos
+import { getDatabase, ref, onValue, off } from "firebase/database";
+import { database } from "../config/firebaseConfig";
 
 export default function Monitoreo() {
-  // Estados para los datos de Firebase
   const [ph, setPh] = useState<number | null>(null);
   const [temperatura, setTemperatura] = useState<number | null>(null);
   const [humedad, setHumedad] = useState<number | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string>("");
   const [timeActive, setTimeActive] = useState<number | null>(null);
 
-  // Obtener datos de Firebase en tiempo real
   useEffect(() => {
-    const refPh = database().ref("/monitoreo/ph");
-    const refTemperatura = database().ref("/monitoreo/temperatura");
-    const refHumedad = database().ref("/monitoreo/humedad");
-    const refTimeActive = database().ref("/monitoreo/ultima_actualizacion");
+    // Crear referencias usando la instancia de database importada
+    const phRef = ref(database, "/monitoreo/ph");
+    const temperaturaRef = ref(database, "/monitoreo/temperatura");
+    const humedadRef = ref(database, "/monitoreo/humedad");
+    const timeActiveRef = ref(database, "/monitoreo/ultima_actualizacion");
 
     // Suscribirse a cambios en el pH
-    refPh.on("value", (snapshot: FirebaseDatabaseTypes.DataSnapshot) => {
+    onValue(phRef, (snapshot) => {
       const phValue = snapshot.val();
       setPh(phValue);
       setLastUpdate(new Date().toLocaleTimeString());
     });
 
     // Suscribirse a cambios en la temperatura
-    refTemperatura.on(
-      "value",
-      (snapshot: FirebaseDatabaseTypes.DataSnapshot) => {
-        const tempValue = snapshot.val();
-        setTemperatura(tempValue);
-        setLastUpdate(new Date().toLocaleTimeString());
-      }
-    );
+    onValue(temperaturaRef, (snapshot) => {
+      const tempValue = snapshot.val();
+      setTemperatura(tempValue);
+      setLastUpdate(new Date().toLocaleTimeString());
+    });
 
-    refTimeActive.on(
-      "value",
-      (snapshot: FirebaseDatabaseTypes.DataSnapshot) => {
-        const timeActiveValue = snapshot.val();
-        setTimeActive(timeActiveValue);
-        setLastUpdate(new Date().toLocaleTimeString());
-      }
-    );
+    // Suscribirse a cambios en el tiempo activo
+    onValue(timeActiveRef, (snapshot) => {
+      const timeActiveValue = snapshot.val();
+      setTimeActive(timeActiveValue);
+      setLastUpdate(new Date().toLocaleTimeString());
+    });
 
     // Suscribirse a cambios en la humedad
-    refHumedad.on("value", (snapshot: FirebaseDatabaseTypes.DataSnapshot) => {
+    onValue(humedadRef, (snapshot) => {
       const humValue = snapshot.val();
       setHumedad(humValue);
       setLastUpdate(new Date().toLocaleTimeString());
@@ -66,9 +59,10 @@ export default function Monitoreo() {
 
     // Limpiar suscripciones al desmontar el componente
     return () => {
-      refPh.off("value");
-      refTemperatura.off("value");
-      refHumedad.off("value");
+      off(phRef);
+      off(temperaturaRef);
+      off(humedadRef);
+      off(timeActiveRef);
     };
   }, []);
 
