@@ -16,7 +16,7 @@ export default function TabLayout() {
   const keyboard = useKeyboard();
   return (
     <Tabs
-      initialRouteName="monitoreo"
+      initialRouteName="index"
       screenOptions={{
         tabBarActiveTintColor: "#FFD700",
         tabBarInactiveTintColor: "#FFFFFF",
@@ -30,7 +30,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="monitoreo" // archivo donde va la pantalla monitoreo.tsx
+        name="index" // archivo donde va la pantalla monitoreo.tsx
         options={{
           title: "Monitoreo",
           tabBarIcon: ({ color }) => (
@@ -39,7 +39,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="index" // index.tsx
+        name="informacion" // index.tsx
         options={{
           title: "Info",
           tabBarIcon: ({ color }) => (
