@@ -9,9 +9,16 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
+  Linking,
 } from "react-native";
 
 export default function ConfiguracionScreen() {
+
+  const handlePress = () => {
+    const url = "https://www.youtube.com/";
+    Linking.openURL(url).catch((err) => console.error("An error occurred", err));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -32,13 +39,14 @@ export default function ConfiguracionScreen() {
       </TouchableOpacity>
       {/* menu-Items */}
       <View style={styles.menuContainer}>
+
         {/* Donde comprar */}
         <View style={styles.menuItemWrapper}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={handlePress}>
             <View style={styles.menuIconContainer}>
-              <FontAwesome name="shopping-cart" size={24} color="#235025" />
+              <FontAwesome5 name="book-open" size={24} color="#235025" />
             </View>
-            <Text style={styles.menuText}>Dónde comprar</Text>
+            <Text style={styles.menuText}>Manuales</Text>
             <FontAwesome
               name="angle-right"
               size={24}
@@ -49,7 +57,8 @@ export default function ConfiguracionScreen() {
         </View>
         {/* Politica */}
         <View style={styles.menuItemWrapper}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem}
+          onPress={() => router.push("/politicas")}>
             <View style={styles.menuIconContainer}>
               <FontAwesome name="file-text" size={24} color="#235025" />
             </View>
