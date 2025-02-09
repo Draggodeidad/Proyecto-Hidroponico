@@ -131,6 +131,7 @@ export default function Monitoreo() {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
+                color="green"
               />
               {show1 && (
                 <DateTimePicker
@@ -152,6 +153,7 @@ export default function Monitoreo() {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
+              color="green"
             />
             {show2 && (
               <DateTimePicker

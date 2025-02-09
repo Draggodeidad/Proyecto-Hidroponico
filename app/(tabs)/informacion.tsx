@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { router } from "expo-router";
+import { router, Link } from "expo-router";
 
 export default function App() {
   return (
