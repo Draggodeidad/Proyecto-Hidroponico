@@ -13,10 +13,11 @@ import {
 } from "react-native";
 
 export default function ConfiguracionScreen() {
-
   const handlePress = () => {
     const url = "https://www.youtube.com/";
-    Linking.openURL(url).catch((err) => console.error("An error occurred", err));
+    Linking.openURL(url).catch((err) =>
+      console.error("An error occurred", err)
+    );
   };
 
   return (
@@ -39,7 +40,6 @@ export default function ConfiguracionScreen() {
       </TouchableOpacity>
       {/* menu-Items */}
       <View style={styles.menuContainer}>
-
         {/* Donde comprar */}
         <View style={styles.menuItemWrapper}>
           <TouchableOpacity style={styles.menuItem} onPress={handlePress}>
@@ -57,8 +57,10 @@ export default function ConfiguracionScreen() {
         </View>
         {/* Politica */}
         <View style={styles.menuItemWrapper}>
-          <TouchableOpacity style={styles.menuItem}
-          onPress={() => router.push("/politicas")}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => router.push("/politicas")}
+          >
             <View style={styles.menuIconContainer}>
               <FontAwesome name="file-text" size={24} color="#235025" />
             </View>
@@ -92,7 +94,10 @@ export default function ConfiguracionScreen() {
 
         {/* Ayuda */}
         <View style={styles.menuItemWrapper}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => router.push("/ayuda")}
+          >
             <View style={styles.menuIconContainer}>
               <FontAwesome name="question-circle" size={24} color="#235025" />
             </View>

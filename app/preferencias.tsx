@@ -1,11 +1,18 @@
 import React from "react";
-import { SafeAreaView, Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { Card, Radio, RadioGroup, Divider } from "@ui-kitten/components";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Preferencias() {
   const [selectedTemaIndex, setSelectedTemaIndex] = React.useState(0);
+  const [selectedNotification, setSelectedNotification] = React.useState(0);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -14,31 +21,90 @@ export default function Preferencias() {
         <Card style={styles.card}>
           <RadioGroup
             selectedIndex={selectedTemaIndex}
-            onChange={index => setSelectedTemaIndex(index)}
+            onChange={(index) => setSelectedTemaIndex(index)}
           >
             {/* Opción Claro */}
-            <TouchableOpacity style={styles.radioOption} onPress={() => setSelectedTemaIndex(0)}>
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => setSelectedTemaIndex(0)}
+            >
               <MaterialIcons name="light-mode" size={24} color="black" />
-              <Radio style={styles.radio} checked={selectedTemaIndex === 0} onChange={() => setSelectedTemaIndex(0)}>
+              <Radio
+                style={styles.radio}
+                checked={selectedTemaIndex === 0}
+                onChange={() => setSelectedTemaIndex(0)}
+              >
                 Claro
               </Radio>
             </TouchableOpacity>
             <Divider style={styles.divider} />
 
             {/* Opción Oscuro */}
-            <TouchableOpacity style={styles.radioOption} onPress={() => setSelectedTemaIndex(1)}>
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => setSelectedTemaIndex(1)}
+            >
               <MaterialIcons name="dark-mode" size={24} color="black" />
-              <Radio style={styles.radio} checked={selectedTemaIndex === 1} onChange={() => setSelectedTemaIndex(1)}>
+              <Radio
+                style={styles.radio}
+                checked={selectedTemaIndex === 1}
+                onChange={() => setSelectedTemaIndex(1)}
+              >
                 Oscuro
               </Radio>
             </TouchableOpacity>
             <Divider style={styles.divider} />
 
             {/* Opción Automático */}
-            <TouchableOpacity style={styles.radioOption} onPress={() => setSelectedTemaIndex(2)}>
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => setSelectedTemaIndex(2)}
+            >
               <Ionicons name="invert-mode" size={24} color="black" />
-              <Radio style={styles.radio} checked={selectedTemaIndex === 2} onChange={() => setSelectedTemaIndex(2)}>
+              <Radio
+                style={styles.radio}
+                checked={selectedTemaIndex === 2}
+                onChange={() => setSelectedTemaIndex(2)}
+              >
                 Automático
+              </Radio>
+            </TouchableOpacity>
+          </RadioGroup>
+        </Card>
+
+        {/* Opciones de Notificaciones */}
+        <Text style={styles.title}>Notificaciones</Text>
+        <Card style={styles.card}>
+          <RadioGroup onChange={(index) => setSelectedNotification(index)}>
+            {/* Opción No Notificar */}
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => setSelectedNotification(0)}
+            >
+              <MaterialIcons name="notifications-on" size={24} color="black" />
+              <Radio
+                style={styles.radio}
+                checked={selectedNotification === 0}
+                onChange={() => setSelectedNotification(0)}
+              >
+                Activar
+              </Radio>
+            </TouchableOpacity>
+          </RadioGroup>
+          <Divider style={styles.divider} />
+          <RadioGroup>
+            {/* Opción No Notificar */}
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => setSelectedNotification(1)}
+            >
+              <MaterialIcons name="notifications-off" size={24} color="black" />
+              <Radio
+                style={styles.radio}
+                checked={selectedNotification === 1}
+                onChange={() => setSelectedNotification(1)}
+              >
+                Desactivar
               </Radio>
             </TouchableOpacity>
           </RadioGroup>
@@ -77,6 +143,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: "#235025",
     fontWeight: "bold",
+    marginTop: 15,
   },
   radioOption: {
     flexDirection: "row",
