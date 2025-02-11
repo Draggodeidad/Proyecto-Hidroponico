@@ -256,10 +256,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   titulo: {
-    color: "#99ff99",
+    color: "#fafafa",
     fontSize: 18,
     marginBottom: 20,
-    opacity: 0.5,
+    fontWeight: "semibold",
+    //opacity: 0.5,
   },
   data: {
     width: "100%",

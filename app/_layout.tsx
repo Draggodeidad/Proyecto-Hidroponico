@@ -89,6 +89,21 @@ export default function RootLayout() {
               },
             }}
           />
+          <Stack.Screen
+            name="infocultivos"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "InfoCultivos",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>

@@ -34,7 +34,7 @@ export default function TabLayout() {
         options={{
           title: "Monitoreo",
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="bar-chart" size={28} color="black" />
+            <FontAwesome name="bar-chart" size={28} color={color} />
           ),
         }}
       />
@@ -43,7 +43,7 @@ export default function TabLayout() {
         options={{
           title: "Info",
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="seedling" size={24} color="black" />
+            <FontAwesome5 name="seedling" size={24} color={color} />
           ),
         }}
       />
@@ -52,7 +52,7 @@ export default function TabLayout() {
         options={{
           title: "IA",
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="robot" size={24} color="black" />
+            <FontAwesome5 name="robot" size={24} color={color} />
           ),
         }}
       />
@@ -61,7 +61,7 @@ export default function TabLayout() {
         options={{
           title: "Configuracion",
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="gear" size={28} color="black" />
+            <FontAwesome name="gear" size={28} color={color} />
           ),
         }}
       />
