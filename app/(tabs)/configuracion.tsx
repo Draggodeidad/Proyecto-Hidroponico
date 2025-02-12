@@ -34,7 +34,8 @@ export default function ConfiguracionScreen() {
       </View>
 
       {/* Inicio de Sesion */}
-      <TouchableOpacity style={styles.signInContainer}>
+      <TouchableOpacity style={styles.signInContainer}
+      onPress={() => router.push("/loggin")}>
         <Text style={styles.signInText}>Iniciar sesión o registrarse</Text>
         <FontAwesome name="sign-in" size={24} color="#235025" />
       </TouchableOpacity>
