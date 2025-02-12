@@ -104,6 +104,36 @@ export default function RootLayout() {
               },
             }}
           />
+          <Stack.Screen
+            name="loggin"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Login",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="signup"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Sign Up",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
