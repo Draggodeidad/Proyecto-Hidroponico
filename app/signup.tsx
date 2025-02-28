@@ -12,29 +12,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getAuth } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { firestore } from "./config/firebaseConfig";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { router } from "expo-router";
 
-// Define el tipo para los parámetros de navegación
-type RootStackParamList = {
-  Register: undefined;
-  Login: undefined;
-  Home: undefined;
-  // Añade aquí otras pantallas según sea necesario
-};
-
-// Define el tipo para las props de navegación
-type RegisterScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "Register"
->;
-
-// Define el tipo para las props del componente
-type Props = {
-  navigation: RegisterScreenNavigationProp;
-};
-
-const RegisterScreen = ({ navigation }: Props) => {
+const RegisterScreen = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -81,11 +61,19 @@ const RegisterScreen = ({ navigation }: Props) => {
         createdAt: new Date().toISOString(),
       });
 
+      // Restablecer carga
       setLoading(false);
+
+      // Si todo salió bien, mostrar mensaje y redirigir
       Alert.alert(
         "Registro exitoso",
         "Tu cuenta ha sido creada correctamente",
-        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+        [
+          {
+            text: "OK",
+            onPress: () => router.push("/loggin"), // Redirigir al usuario después de aceptar la alerta
+          },
+        ]
       );
     } catch (error: any) {
       setLoading(false);

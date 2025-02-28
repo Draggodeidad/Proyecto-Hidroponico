@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import Feather from "@expo/vector-icons/Feather";
+import { saveUserSession } from "./config/authService";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +36,14 @@ const LoginScreen = () => {
     try {
       setLoading(true);
       // Autenticar usuario con email y contraseña
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Guardar la sesión del usuario
+      await saveUserSession(userCredential.user);
 
       setLoading(false);
       // Redirigir al home después de iniciar sesión exitosamente
@@ -56,7 +64,7 @@ const LoginScreen = () => {
         case "auth/user-not-found":
           errorMessage = "No existe una cuenta con este correo electrónico";
           break;
-        case "auth/wrong-password":
+        case "auth/invalid-credential":
           errorMessage = "Contraseña incorrecta";
           break;
         case "auth/too-many-requests":
