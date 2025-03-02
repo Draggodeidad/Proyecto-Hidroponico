@@ -1,6 +1,7 @@
 // firebaseConfig.ts
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getDatabase, Database } from "firebase/database";
+import { getFirestore, Firestore } from "firebase/firestore";
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -17,11 +18,13 @@ const firebaseConfig = {
 // Inicializar Firebase
 let app: FirebaseApp;
 let database: Database;
+let firestore: Firestore;
 
 if (!getApps().length) {
   try {
     app = initializeApp(firebaseConfig);
     database = getDatabase(app);
+    firestore = getFirestore(app);
   } catch (error) {
     console.error("Error initializing Firebase: ", error);
     throw error;
@@ -29,8 +32,9 @@ if (!getApps().length) {
 } else {
   app = getApps()[0];
   database = getDatabase(app);
+  firestore = getFirestore(app);
 }
 
 // Exportar las configuraciones y la instancia de la base de datos
-export { database };
+export { database, firestore };
 export default app;
