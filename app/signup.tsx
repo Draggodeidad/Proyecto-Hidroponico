@@ -13,6 +13,7 @@ import { getAuth } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { firestore } from "./config/firebaseConfig";
 import { router } from "expo-router";
+import Feather from "@expo/vector-icons/Feather";
 
 const RegisterScreen = () => {
   const [fullName, setFullName] = useState("");
@@ -21,6 +22,9 @@ const RegisterScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisibleV, setIsPasswordVisibleV] = useState(false);  
 
   const auth = getAuth();
 
@@ -124,21 +128,47 @@ const RegisterScreen = () => {
         onChangeText={setEmail}
       />
 
+<View style={styles.inputContainer}>
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
-        secureTextEntry={true}
+        secureTextEntry={!isPasswordVisible} //verificar si la contraseña es registrada, el valor anterior era true
         value={password}
         onChangeText={setPassword}
       />
+      <TouchableOpacity
+          style={styles.eyeButton}
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          activeOpacity={0.8}
+        >
+          <Feather
+            name={isPasswordVisible ? "eye" : "eye-off"} // Cambia el icono
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+        </View>
 
+      <View style={styles.inputContainer}>
       <TextInput
         style={styles.input}
         placeholder="Confirmar contraseña"
-        secureTextEntry={true}
+        secureTextEntry={!isPasswordVisibleV} //lo mismo aca
         value={confirmPassword}
         onChangeText={setConfirmPassword}
       />
+      <TouchableOpacity
+          style={styles.eyeButton}
+          onPress={() => setIsPasswordVisibleV(!isPasswordVisibleV)}
+          activeOpacity={0.8}
+        >
+          <Feather
+            name={isPasswordVisibleV ? "eye" : "eye-off"} // Cambia el icono
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+        </View>
 
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
@@ -184,6 +214,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 20,
+    alignContent: "center",
+    
+  },
+  inputContainer: {
+    flexDirection: "column",
+  },
+  eyeButton: {
+    alignSelf: "center",
+    marginLeft: 2,
+    position: "absolute",
+    right: 10,
+    padding: 2,
+    top: 10,
   },
   button: {
     backgroundColor: "green",

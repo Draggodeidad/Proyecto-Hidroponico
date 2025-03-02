@@ -107,6 +107,7 @@ const LoginScreen = () => {
         <TouchableOpacity
           style={styles.eyeButton}
           onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          activeOpacity={0.8}
         >
           <Feather
             name={isPasswordVisible ? "eye" : "eye-off"} // Cambia el icono
@@ -168,6 +169,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
+    marginTop: 15,
   },
   buttonDisabled: {
     backgroundColor: "rgba(0, 128, 0, 0.5)",
@@ -195,12 +197,13 @@ const styles = StyleSheet.create({
     //borderBottomWidth: 1,
 
     //paddingHorizontal: 10,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   inputpws: {
     flex: 1,
-    paddingVertical: 10,
-    fontSize: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    fontSize: 14,
     borderColor: "green",
     borderWidth: 1,
     borderRadius: 10,
@@ -209,6 +212,9 @@ const styles = StyleSheet.create({
   eyeButton: {
     alignSelf: "center",
     marginLeft: 2,
+    position: "absolute",
+    right: 10,
+    padding: 2,
   },
 });
 
