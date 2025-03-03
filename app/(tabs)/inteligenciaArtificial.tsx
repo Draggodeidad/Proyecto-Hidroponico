@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,10 +13,10 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useKeyboard } from "@react-native-community/hooks";
-import Markdown from 'react-native-markdown-display';
+import Markdown from "react-native-markdown-display";
+import ProtectedRoute from "../protectedRoute";
 
 export default function inteligenciaScreen() {
-
   const keyboard = useKeyboard();
   const [input, setInput] = useState("");
   const [userMessage, setUserMessage] = useState(""); // Mensaje del usuario
@@ -36,125 +36,132 @@ export default function inteligenciaScreen() {
     setInput("");
 
     try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer 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",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          "model": "deepseek/deepseek-chat:free",
-          "messages": [
-            {
-              "role": "user",
-              "content": "Responde la siguiente solicitud como si fueras un experto en agricultura: " + input
-            }
-          ]
-        })
-      });
-      
+      const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization:
+              "Bearer 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",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "deepseek/deepseek-chat:free",
+            messages: [
+              {
+                role: "user",
+                content:
+                  "Responde la siguiente solicitud como si fueras un experto en agricultura: " +
+                  input,
+              },
+            ],
+          }),
+        }
+      );
+
       const data = await response.json();
       console.log(data);
 
-      const markdownText = data.choices?.[0]?.message?.content || 'Respuesta no recibida';
+      const markdownText =
+        data.choices?.[0]?.message?.content || "Respuesta no recibida";
       setAiResponse(markdownText);
     } catch (error) {
-      setAiResponse('Error al enviar el mensaje: ' + error);
+      setAiResponse("Error al enviar el mensaje: " + error);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 20}
-      >
-        {/* Aqui va el header */}
-        <View style={styles.header}>
-          <Text style={styles.headerText}>HidroSmart</Text>
-        </View>
-
-        {/* Aqui van a ir los mensajes de la conversación */}
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={[
-            styles.scrollContent,
-            keyboard.keyboardShown && {
-              paddingBottom: keyboard.keyboardHeight,
-            },
-          ]}
+    <ProtectedRoute>
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 20}
         >
-          {/* Mensaje Enviado del Usuario */}
-          {userMessage && (
-            <View style={styles.messageSendContainer}>
-              <Text style={styles.bubbleSend}>{userMessage}</Text>
-              <FontAwesome
-                name="user-circle"
-                size={24}
-                color="black"
-                style={styles.icon}
-              />
-            </View>
-          )}
+          {/* Aqui va el header */}
+          <View style={styles.header}>
+            <Text style={styles.headerText}>HidroSmart</Text>
+          </View>
 
-          {/* Mensaje Recibido y Respuesta de la IA */}
-          {loading ? (
-            <View style={styles.messageReceivedContainer}>
-              <FontAwesome
-                name="cogs"
-                size={24}
-                color="black"
-                style={styles.icon}
-              />
-              <Text style={styles.bubbleReceived}>Cargando...</Text>
-            </View>
-          ) : aiResponse ? (
-            
-            <View style={styles.messageReceivedContainer}>
-              <FontAwesome
-                name="cogs"
-                size={24}
-                color="black"
-                style={styles.icon}
-              />
-              <View style={styles.bubbleReceived}>
-                <Markdown>{aiResponse}</Markdown>
+          {/* Aqui van a ir los mensajes de la conversación */}
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={[
+              styles.scrollContent,
+              keyboard.keyboardShown && {
+                paddingBottom: keyboard.keyboardHeight,
+              },
+            ]}
+          >
+            {/* Mensaje Enviado del Usuario */}
+            {userMessage && (
+              <View style={styles.messageSendContainer}>
+                <Text style={styles.bubbleSend}>{userMessage}</Text>
+                <FontAwesome
+                  name="user-circle"
+                  size={24}
+                  color="black"
+                  style={styles.icon}
+                />
               </View>
-            </View>
-          ) : null}
-        </ScrollView>
+            )}
 
-        {/* Aqui va el input de texto */}
-        <View style={styles.inputContainer}>
+            {/* Mensaje Recibido y Respuesta de la IA */}
+            {loading ? (
+              <View style={styles.messageReceivedContainer}>
+                <FontAwesome
+                  name="cogs"
+                  size={24}
+                  color="black"
+                  style={styles.icon}
+                />
+                <Text style={styles.bubbleReceived}>Cargando...</Text>
+              </View>
+            ) : aiResponse ? (
+              <View style={styles.messageReceivedContainer}>
+                <FontAwesome
+                  name="cogs"
+                  size={24}
+                  color="black"
+                  style={styles.icon}
+                />
+                <View style={styles.bubbleReceived}>
+                  <Markdown>{aiResponse}</Markdown>
+                </View>
+              </View>
+            ) : null}
+          </ScrollView>
 
-          {/* Icono subir archivos 
-          <TouchableOpacity>
-            <Ionicons name="add" size={24} color="black" />
-          </TouchableOpacity>*/}
+          {/* Aqui va el input de texto */}
+          <View style={styles.inputContainer}>
+            {/* Icono subir archivos 
+        <TouchableOpacity>
+          <Ionicons name="add" size={24} color="black" />
+        </TouchableOpacity>*/}
 
-          {/* Input */}
-          <TextInput
-          multiline
-          placeholder="Escribe un mensaje" 
-          style={styles.input} 
-          value={input}
-          onChangeText={setInput} />
-
-          {/* Icono de Enviar */}
-          <TouchableOpacity onPress={sendMessage}>
-            <Ionicons 
-              name="send" 
-              size={24} 
-              color={input.trim() ? "black" : "gray"}
+            {/* Input */}
+            <TextInput
+              multiline
+              placeholder="Escribe un mensaje"
+              style={styles.input}
+              value={input}
+              onChangeText={setInput}
             />
-          </TouchableOpacity>
 
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            {/* Icono de Enviar */}
+            <TouchableOpacity onPress={sendMessage}>
+              <Ionicons
+                name="send"
+                size={24}
+                color={input.trim() ? "black" : "gray"}
+              />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ProtectedRoute>
   );
 }
 
