@@ -134,6 +134,101 @@ export default function RootLayout() {
               },
             }}
           />
+          <Stack.Screen
+            name="cultivos/lechuga"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Lechuga",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
+            <Stack.Screen
+            name="cultivos/fresas"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Fresas",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
+
+            <Stack.Screen
+            name="cultivos/tomate"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Tomate",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
+          
+          <Stack.Screen
+            name="cultivos/albahaca"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Albahaca",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
+
+            <Stack.Screen
+            name="cultivos/papas"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Papas",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
+
+            <Stack.Screen
+            name="cultivos/pimientos"
+            options={{
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#235025",
+              headerTitle: "Pimientos",
+              headerShadowVisible: false,
+              headerTitleStyle: {
+                color: "#235025",
+                fontWeight: "bold",
+              },
+            }}
+          />
+
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>

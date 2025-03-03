@@ -16,7 +16,7 @@ export default function App() {
       <View style={styles.topSection}>
         <Image
           source={{
-            uri: "https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain",
+            uri: "https://cdn.pixabay.com/photo/2019/06/06/08/00/hydroponics-4255403_1280.jpg",
           }}
           style={styles.topImage}
         />
@@ -26,63 +26,94 @@ export default function App() {
       <View style={styles.bottomSection}>
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/infocultivos")}
+            onPress={() => router.push("/cultivos/lechuga")}
             style={{ width: "100%" }}
           >
             <Image
               source={{
-                uri: "https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain",
+                uri: "https://cdn.pixabay.com/photo/2015/09/14/19/53/nature-940032_1280.jpg",
               }}
               style={styles.imgCultivo}
             />
-            <Text style={styles.title}>Lechuga 1</Text>
+            <Text style={styles.title}>Lechuga</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/infocultivos")}
+            onPress={() => router.push("/cultivos/fresas")}
             style={{ width: "100%" }}
           >
             <Image
               source={{
-                uri: "https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain",
+                uri: "https://cdn.pixabay.com/photo/2019/07/11/07/29/strawberries-4330211_1280.jpg",
               }}
               style={styles.imgCultivo}
             />
-            <Text style={styles.title}>Lechuga 1</Text>
+            <Text style={styles.title}>Fresas</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/infocultivos")}
+            onPress={() => router.push("/cultivos/tomate")}
             style={{ width: "100%" }}
           >
             <Image
               source={{
-                uri: "https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain",
+                uri: "https://cdn.pixabay.com/photo/2019/07/11/10/14/cherry-tomato-4330441_1280.jpg",
               }}
               style={styles.imgCultivo}
             />
-            <Text style={styles.title}>Lechuga 1</Text>
+            <Text style={styles.title}>Tomate</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.cultivo}>
           <TouchableOpacity
-            onPress={() => router.push("/infocultivos")}
+            onPress={() => router.push("/cultivos/albahaca")}
             style={{ width: "100%" }}
           >
             <Image
               source={{
-                uri: "https://th.bing.com/th/id/OIP.CaTRl1Alana3ISLYythVUAHaE8?rs=1&pid=ImgDetMain",
+                uri: "https://cdn.pixabay.com/photo/2015/09/02/05/04/basil-917999_1280.jpg",
               }}
               style={styles.imgCultivo}
             />
-            <Text style={styles.title}>Lechuga 1</Text>
+            <Text style={styles.title}>Albahaca</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.cultivo}>
+          <TouchableOpacity
+            onPress={() => router.push("/cultivos/papas")}
+            style={{ width: "100%" }}
+          >
+            <Image
+              source={{
+                uri: "https://cdn.pixabay.com/photo/2018/05/29/23/18/potato-3440360_1280.jpg",
+              }}
+              style={styles.imgCultivo}
+            />
+            <Text style={styles.title}>Papas</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.cultivo}>
+          <TouchableOpacity
+            onPress={() => router.push("/cultivos/pimientos")}
+            style={{ width: "100%" }}
+          >
+            <Image
+              source={{
+                uri: "https://cdn.pixabay.com/photo/2017/09/25/20/44/peppers-2786684_1280.jpg",
+              }}
+              style={styles.imgCultivo}
+            />
+            <Text style={styles.title}>Pimientos</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     </ScrollView>
   );

@@ -13,71 +13,74 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useKeyboard } from "@react-native-community/hooks";
+import ProtectedRoute from "../protectedRoute";
 
 export default function inteligenciaScreen() {
   const keyboard = useKeyboard();
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 20}
-      >
-        {/* Aqui va el header */}
-        <View style={styles.header}>
-          <Text style={styles.headerText}>HidroSmart</Text>
-        </View>
-
-        {/* Aqui van a ir los mensajes de la conversación */}
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={[
-            styles.scrollContent,
-            keyboard.keyboardShown && {
-              paddingBottom: keyboard.keyboardHeight,
-            },
-          ]}
+    <ProtectedRoute>
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 20}
         >
-          {/* Mensaje Enviado */}
-          <View style={styles.messageSendContainer}>
-            <Text style={styles.bubbleSend}>Hola Mundooooo....</Text>
-            <FontAwesome
-              name="user-circle"
-              size={24}
-              color="black"
-              style={styles.icon}
-            />
+          {/* Aqui va el header */}
+          <View style={styles.header}>
+            <Text style={styles.headerText}>HidroSmart</Text>
           </View>
 
-          {/* Mensaje Recibido */}
-          <View style={styles.messageReceivedContainer}>
-            <FontAwesome
-              name="cogs"
-              size={24}
-              color="black"
-              style={styles.icon}
-            />
-            <Text style={styles.bubbleReceived}>Hola Mundo....</Text>
+          {/* Aqui van a ir los mensajes de la conversación */}
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={[
+              styles.scrollContent,
+              keyboard.keyboardShown && {
+                paddingBottom: keyboard.keyboardHeight,
+              },
+            ]}
+          >
+            {/* Mensaje Enviado */}
+            <View style={styles.messageSendContainer}>
+              <Text style={styles.bubbleSend}>Hola Mundooooo....</Text>
+              <FontAwesome
+                name="user-circle"
+                size={24}
+                color="black"
+                style={styles.icon}
+              />
+            </View>
+
+            {/* Mensaje Recibido */}
+            <View style={styles.messageReceivedContainer}>
+              <FontAwesome
+                name="cogs"
+                size={24}
+                color="black"
+                style={styles.icon}
+              />
+              <Text style={styles.bubbleReceived}>Hola Mundo....</Text>
+            </View>
+          </ScrollView>
+
+          {/* Aqui va el input de texto */}
+          <View style={styles.inputContainer}>
+            {/* Icono subir archivos */}
+            <TouchableOpacity>
+              <Ionicons name="add" size={24} color="black" />
+            </TouchableOpacity>
+
+            {/* Input */}
+            <TextInput placeholder="Escribe un mensaje" style={styles.input} />
+
+            {/* Icono de Enviar */}
+            <TouchableOpacity>
+              <Ionicons name="send" size={24} color="black" />
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-
-        {/* Aqui va el input de texto */}
-        <View style={styles.inputContainer}>
-          {/* Icono subir archivos */}
-          <TouchableOpacity>
-            <Ionicons name="add" size={24} color="black" />
-          </TouchableOpacity>
-
-          {/* Input */}
-          <TextInput placeholder="Escribe un mensaje" style={styles.input} />
-
-          {/* Icono de Enviar */}
-          <TouchableOpacity>
-            <Ionicons name="send" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ProtectedRoute>
   );
 }
 
