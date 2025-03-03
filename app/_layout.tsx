@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { AuthProvider } from "./config/AuthContext"; // Importa el AuthProvider
 
 // UI Kitten
 import { ApplicationProvider } from "@ui-kitten/components";
@@ -36,107 +37,108 @@ export default function RootLayout() {
   }
 
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen
-            name="ayuda"
-            options={{
-              // headerShown: false, // Quita el header
-              // O si prefieres personalizarlo:
-
-              headerStyle: {
-                backgroundColor: "#ffffff",
-              },
-              headerTintColor: "#235025",
-              headerTitle: "Ayuda",
-              headerShadowVisible: false,
-              headerTitleStyle: {
-                color: "#235025",
-                fontWeight: "bold",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="preferencias"
-            options={{
-              headerStyle: {
-                backgroundColor: "#ffffff",
-              },
-              headerTintColor: "#235025",
-              headerTitle: "Preferencias",
-              headerShadowVisible: false,
-              headerTitleStyle: {
-                color: "#235025",
-                fontWeight: "bold",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="politicas"
-            options={{
-              headerStyle: {
-                backgroundColor: "#ffffff",
-              },
-              headerTintColor: "#235025",
-              headerTitle: "Politicas de Privacidad",
-              headerShadowVisible: false,
-              headerTitleStyle: {
-                color: "#235025",
-                fontWeight: "bold",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="infocultivos"
-            options={{
-              headerStyle: {
-                backgroundColor: "#ffffff",
-              },
-              headerTintColor: "#235025",
-              headerTitle: "InfoCultivos",
-              headerShadowVisible: false,
-              headerTitleStyle: {
-                color: "#235025",
-                fontWeight: "bold",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="loggin"
-            options={{
-              headerStyle: {
-                backgroundColor: "#ffffff",
-              },
-              headerTintColor: "#235025",
-              headerTitle: "Login",
-              headerShadowVisible: false,
-              headerTitleStyle: {
-                color: "#235025",
-                fontWeight: "bold",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="signup"
-            options={{
-              headerStyle: {
-                backgroundColor: "#ffffff",
-              },
-              headerTintColor: "#235025",
-              headerTitle: "Sign Up",
-              headerShadowVisible: false,
-              headerTitleStyle: {
-                color: "#235025",
-                fontWeight: "bold",
-              },
-            }}
-          />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </ApplicationProvider>
+    <AuthProvider>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen
+              name="ayuda"
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ffffff",
+                },
+                headerTintColor: "#235025",
+                headerTitle: "Ayuda",
+                headerShadowVisible: false,
+                headerTitleStyle: {
+                  color: "#235025",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="preferencias"
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ffffff",
+                },
+                headerTintColor: "#235025",
+                headerTitle: "Preferencias",
+                headerShadowVisible: false,
+                headerTitleStyle: {
+                  color: "#235025",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="politicas"
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ffffff",
+                },
+                headerTintColor: "#235025",
+                headerTitle: "Politicas de Privacidad",
+                headerShadowVisible: false,
+                headerTitleStyle: {
+                  color: "#235025",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="infocultivos"
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ffffff",
+                },
+                headerTintColor: "#235025",
+                headerTitle: "InfoCultivos",
+                headerShadowVisible: false,
+                headerTitleStyle: {
+                  color: "#235025",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="loggin"
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ffffff",
+                },
+                headerTintColor: "#235025",
+                headerTitle: "Login",
+                headerShadowVisible: false,
+                headerTitleStyle: {
+                  color: "#235025",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="signup"
+              options={{
+                headerStyle: {
+                  backgroundColor: "#ffffff",
+                },
+                headerTintColor: "#235025",
+                headerTitle: "Sign Up",
+                headerShadowVisible: false,
+                headerTitleStyle: {
+                  color: "#235025",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </ApplicationProvider>
+    </AuthProvider>
   );
 }

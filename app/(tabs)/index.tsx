@@ -8,26 +8,33 @@ import {
   TouchableOpacity,
   Button,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
 import { Toggle, ToggleProps, Input } from "@ui-kitten/components";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDatabase, ref, onValue, off } from "firebase/database";
 import { database } from "../config/firebaseConfig";
+import { useAuth } from "../config/AuthContext";
+import ProtectedRoute from "../protectedRoute";
 
 export default function Monitoreo() {
   const [ph, setPh] = useState<number | null>(null);
   const [temperatura, setTemperatura] = useState<number | null>(null);
-  const [humedad, setHumedad] = useState<number | null>(null);
+  //const [humedad, setHumedad] = useState<number | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string>("");
   const [timeActive, setTimeActive] = useState<number | null>(null);
+  const [tds, setTds] = useState<number | null>(null);
+  const [turbidez, setTurbidez] = useState<number | null>(null);
 
   useEffect(() => {
     // Crear referencias usando la instancia de database importada
     const phRef = ref(database, "/monitoreo/ph");
     const temperaturaRef = ref(database, "/monitoreo/temperatura");
-    const humedadRef = ref(database, "/monitoreo/humedad");
+    //const humedadRef = ref(database, "/monitoreo/humedad");
     const timeActiveRef = ref(database, "/monitoreo/ultima_actualizacion");
+    const tdsRef = ref(database, "/monitoreo/tds");
+    const turbidezRef = ref(database, "/monitoreo/turbidez");
 
     // Suscribirse a cambios en el pH
     onValue(phRef, (snapshot) => {
@@ -50,18 +57,24 @@ export default function Monitoreo() {
       setLastUpdate(new Date().toLocaleTimeString());
     });
 
-    // Suscribirse a cambios en la humedad
-    onValue(humedadRef, (snapshot) => {
-      const humValue = snapshot.val();
-      setHumedad(humValue);
+    // Suscribirse a cambios tds
+    onValue(tdsRef, (snapshot) => {
+      const tdsValue = snapshot.val();
+      setTds(tdsValue);
       setLastUpdate(new Date().toLocaleTimeString());
     });
 
+    // Suscribirse a los cambios en la turbidez
+    onValue(turbidezRef, (snapshot) => {
+      const turbidezValue = snapshot.val();
+      setTurbidez(turbidezValue);
+      setLastUpdate(new Date().toLocaleTimeString());
+    });
     // Limpiar suscripciones al desmontar el componente
     return () => {
       off(phRef);
       off(temperaturaRef);
-      off(humedadRef);
+      //off(humedadRef);
       off(timeActiveRef);
     };
   }, []);
@@ -110,7 +123,20 @@ export default function Monitoreo() {
   };
   const successToggleState = useToggleState();
 
-  return (
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#235025" />
+        <Text style={styles.loadingText}>
+          Cargando información de cultivos...
+        </Text>
+      </View>
+    );
+  }
+
+  const content = (
     <ScrollView style={styles.container}>
       <Image
         source={{
@@ -207,6 +233,14 @@ export default function Monitoreo() {
           <View style={styles.circleContainer}>
             <View style={styles.circle}>
               <Text style={styles.dato}>
+                {tds !== null ? tds.toFixed(1) : "--"}
+              </Text>
+            </View>
+            <Text style={styles.circletext}>TDS</Text>
+          </View>
+          <View style={styles.circleContainer}>
+            <View style={styles.circle}>
+              <Text style={styles.dato}>
                 {temperatura !== null ? `${temperatura.toFixed(1)}°C` : "--"}
               </Text>
             </View>
@@ -215,10 +249,10 @@ export default function Monitoreo() {
           <View style={styles.circleContainer}>
             <View style={styles.circle}>
               <Text style={styles.dato}>
-                {humedad !== null ? `${humedad.toFixed(1)}%` : "--"}
+                {turbidez !== null ? turbidez.toFixed(1) : "--"}
               </Text>
             </View>
-            <Text style={styles.circletext}>Humedad</Text>
+            <Text style={styles.circletext}>Turdibez</Text>
           </View>
         </View>
       </View>
@@ -231,6 +265,11 @@ export default function Monitoreo() {
         <Text style={styles.buttonText}>Preguntar a la IA</Text>
       </TouchableOpacity>
     </ScrollView>
+  );
+
+  return (
+    // Envolver Componente
+    <ProtectedRoute>{content}</ProtectedRoute>
   );
 }
 
@@ -245,6 +284,17 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
     marginBottom: 25,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#235025",
   },
   monitoreo: {
     backgroundColor: "#004d00",

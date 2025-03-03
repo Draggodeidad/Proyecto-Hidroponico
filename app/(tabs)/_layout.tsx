@@ -10,10 +10,28 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useKeyboard } from "@react-native-community/hooks";
-
+import { useEffect } from "react";
+import { router } from "expo-router";
+import { getUserSession } from "../config/authService";
+import ProtectedRoute from "../protectedRoute";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const keyboard = useKeyboard();
+  // useEffect(() => {
+  //   // Verificar si existe una sesión al iniciar la app
+  //   const checkSession = async () => {
+  //     const user = await getUserSession();
+
+  //     // Si no hay sesión, mostrar pantalla de login
+  //     if (!user) {
+  //       router.replace("/loggin");
+  //     } else {
+  //       router.replace("/");
+  //     }
+  //   };
+
+  //   checkSession();
+  // }, []);
   return (
     <Tabs
       initialRouteName="index"
