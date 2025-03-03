@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   View,
   Text,
@@ -13,36 +13,84 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useKeyboard } from "@react-native-community/hooks";
-import ProtectedRoute from "../protectedRoute";
+import Markdown from 'react-native-markdown-display';
 
 export default function inteligenciaScreen() {
-  const keyboard = useKeyboard();
-  return (
-    <ProtectedRoute>
-      <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 20}
-        >
-          {/* Aqui va el header */}
-          <View style={styles.header}>
-            <Text style={styles.headerText}>HidroSmart</Text>
-          </View>
 
-          {/* Aqui van a ir los mensajes de la conversación */}
-          <ScrollView
-            style={styles.container}
-            contentContainerStyle={[
-              styles.scrollContent,
-              keyboard.keyboardShown && {
-                paddingBottom: keyboard.keyboardHeight,
-              },
-            ]}
-          >
-            {/* Mensaje Enviado */}
+  const keyboard = useKeyboard();
+  const [input, setInput] = useState("");
+  const [userMessage, setUserMessage] = useState(""); // Mensaje del usuario
+  const [aiResponse, setAiResponse] = useState(""); // Respuesta de la IA
+  const [loading, setLoading] = useState(false);
+
+  async function sendMessage() {
+    if (!input.trim()) {
+      return;
+    }
+
+    setUserMessage(input);
+    setLoading(true);
+    setAiResponse(""); // Limpiar respuesta anterior
+
+    const messageToSend = input;
+    setInput("");
+
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer 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",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": "deepseek/deepseek-chat:free",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Responde la siguiente solicitud como si fueras un experto en agricultura: " + input
+            }
+          ]
+        })
+      });
+      
+      const data = await response.json();
+      console.log(data);
+
+      const markdownText = data.choices?.[0]?.message?.content || 'Respuesta no recibida';
+      setAiResponse(markdownText);
+    } catch (error) {
+      setAiResponse('Error al enviar el mensaje: ' + error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 20}
+      >
+        {/* Aqui va el header */}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>HidroSmart</Text>
+        </View>
+
+        {/* Aqui van a ir los mensajes de la conversación */}
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={[
+            styles.scrollContent,
+            keyboard.keyboardShown && {
+              paddingBottom: keyboard.keyboardHeight,
+            },
+          ]}
+        >
+          {/* Mensaje Enviado del Usuario */}
+          {userMessage && (
             <View style={styles.messageSendContainer}>
-              <Text style={styles.bubbleSend}>Hola Mundooooo....</Text>
+              <Text style={styles.bubbleSend}>{userMessage}</Text>
               <FontAwesome
                 name="user-circle"
                 size={24}
@@ -50,8 +98,10 @@ export default function inteligenciaScreen() {
                 style={styles.icon}
               />
             </View>
+          )}
 
-            {/* Mensaje Recibido */}
+          {/* Mensaje Recibido y Respuesta de la IA */}
+          {loading ? (
             <View style={styles.messageReceivedContainer}>
               <FontAwesome
                 name="cogs"
@@ -59,28 +109,52 @@ export default function inteligenciaScreen() {
                 color="black"
                 style={styles.icon}
               />
-              <Text style={styles.bubbleReceived}>Hola Mundo....</Text>
+              <Text style={styles.bubbleReceived}>Cargando...</Text>
             </View>
-          </ScrollView>
+          ) : aiResponse ? (
+            
+            <View style={styles.messageReceivedContainer}>
+              <FontAwesome
+                name="cogs"
+                size={24}
+                color="black"
+                style={styles.icon}
+              />
+              <View style={styles.bubbleReceived}>
+                <Markdown>{aiResponse}</Markdown>
+              </View>
+            </View>
+          ) : null}
+        </ScrollView>
 
-          {/* Aqui va el input de texto */}
-          <View style={styles.inputContainer}>
-            {/* Icono subir archivos */}
-            <TouchableOpacity>
-              <Ionicons name="add" size={24} color="black" />
-            </TouchableOpacity>
+        {/* Aqui va el input de texto */}
+        <View style={styles.inputContainer}>
 
-            {/* Input */}
-            <TextInput placeholder="Escribe un mensaje" style={styles.input} />
+          {/* Icono subir archivos 
+          <TouchableOpacity>
+            <Ionicons name="add" size={24} color="black" />
+          </TouchableOpacity>*/}
 
-            {/* Icono de Enviar */}
-            <TouchableOpacity>
-              <Ionicons name="send" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </ProtectedRoute>
+          {/* Input */}
+          <TextInput
+          multiline
+          placeholder="Escribe un mensaje" 
+          style={styles.input} 
+          value={input}
+          onChangeText={setInput} />
+
+          {/* Icono de Enviar */}
+          <TouchableOpacity onPress={sendMessage}>
+            <Ionicons 
+              name="send" 
+              size={24} 
+              color={input.trim() ? "black" : "gray"}
+            />
+          </TouchableOpacity>
+
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -128,12 +202,12 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     borderRadius: 16,
   },
-  // contenedor del mensaje recivido
+  // contenedor del mensaje recibido
   messageReceivedContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    marginVertical: 5,
+    marginVertical: 8,
   },
   // estilo de la burbuja
   bubbleReceived: {
@@ -143,7 +217,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   icon: {
-    marginHorizontal: 8,
+    alignSelf: "flex-start",
+    marginTop: 5,
+    padding: 5,
   },
   // contenedor del input
   inputContainer: {
