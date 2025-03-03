@@ -15,6 +15,7 @@ import {
 import { getAuth, signOut } from "firebase/auth";
 import { getUserSession, removeUserSession } from "../config/authService";
 import { doc, getFirestore, getDoc } from "firebase/firestore";
+import { useAuth } from "../config/AuthContext";
 
 // Define la interfaz para el usuario
 interface UserSession {
@@ -66,16 +67,24 @@ export default function ConfiguracionScreen() {
 
   const handleLogout = async () => {
     try {
+      // Cerrar sesión en Firebase
       await signOut(auth);
+
+      // Limpiar sesión
+      //AsyncStorage.clear()
       await removeUserSession();
+
+      // Actualizar el estado
       setUser(null);
-      Alert.alert("Sesión cerrada", "Has cerrado sesión correctamente");
+
+      // Navegar explícitamente
+      //router.replace("/loggin");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
       Alert.alert("Error", "No se pudo cerrar la sesión");
     }
   };
-
+  const { logout } = useAuth();
   const handlePress = () => {
     const url = "https://www.youtube.com/";
     Linking.openURL(url).catch((err) =>

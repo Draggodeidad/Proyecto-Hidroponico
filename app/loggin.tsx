@@ -6,26 +6,23 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import Feather from "@expo/vector-icons/Feather";
-import { saveUserSession } from "./config/authService";
+import { useAuth } from "./config/AuthContext";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  // constantes para el show y hidden de la pswd
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const { login, loading, error, setError } = useAuth();
 
   const auth = getAuth();
 
   const handleLogin = async () => {
     // Resetear error previo
-    setError("");
+    setError(null);
 
     // Validaciones básicas
     if (!email.trim() || !password) {
@@ -34,7 +31,6 @@ const LoginScreen = () => {
     }
 
     try {
-      setLoading(true);
       // Autenticar usuario con email y contraseña
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -42,15 +38,12 @@ const LoginScreen = () => {
         password
       );
 
-      // Guardar la sesión del usuario
-      await saveUserSession(userCredential.user);
+      // Utilizar la función login del contexto
+      await login(userCredential.user);
 
-      setLoading(false);
       // Redirigir al home después de iniciar sesión exitosamente
       router.push("/");
     } catch (error: any) {
-      setLoading(false);
-
       // Manejar errores específicos de Firebase
       let errorMessage = "Ha ocurrido un error durante el inicio de sesión";
 
@@ -109,7 +102,7 @@ const LoginScreen = () => {
           onPress={() => setIsPasswordVisible(!isPasswordVisible)}
         >
           <Feather
-            name={isPasswordVisible ? "eye" : "eye-off"} // Cambia el icono
+            name={isPasswordVisible ? "eye" : "eye-off"}
             size={24}
             color="black"
           />
@@ -191,10 +184,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-
-    //borderBottomWidth: 1,
-
-    //paddingHorizontal: 10,
     marginVertical: 10,
   },
   inputpws: {

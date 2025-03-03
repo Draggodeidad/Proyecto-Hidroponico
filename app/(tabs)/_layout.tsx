@@ -17,21 +17,21 @@ import ProtectedRoute from "../protectedRoute";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const keyboard = useKeyboard();
-  useEffect(() => {
-    // Verificar si existe una sesión al iniciar la app
-    const checkSession = async () => {
-      const user = await getUserSession();
+  // useEffect(() => {
+  //   // Verificar si existe una sesión al iniciar la app
+  //   const checkSession = async () => {
+  //     const user = await getUserSession();
 
-      // Si no hay sesión, mostrar pantalla de login
-      if (!user) {
-        router.replace("/loggin");
-      } else {
-        router.replace("/");
-      }
-    };
+  //     // Si no hay sesión, mostrar pantalla de login
+  //     if (!user) {
+  //       router.replace("/loggin");
+  //     } else {
+  //       router.replace("/");
+  //     }
+  //   };
 
-    checkSession();
-  }, []);
+  //   checkSession();
+  // }, []);
   return (
     <Tabs
       initialRouteName="index"

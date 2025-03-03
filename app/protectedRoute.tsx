@@ -1,50 +1,38 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React, { useEffect } from "react";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
-import { router } from "expo-router";
-import { isUserLoggedIn } from "./config/authService";
+import { usePathname, useRouter } from "expo-router";
+import { useAuth } from "./config/AuthContext";
 
 interface ProtectedRouteProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-// Componente para proteger rutas que requieren autenticación
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { user, loading } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const loggedIn = await isUserLoggedIn();
-
-        if (!loggedIn) {
-          // Si no está autenticado, redirigir a la pantalla de login
-          router.replace("/loggin");
-          return;
-        }
-
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error("Error al verificar autenticación:", error);
-        router.replace("/loggin");
-      } finally {
-        setLoading(false);
+    if (!loading && !user) {
+      // Si ya estamos en la pantalla de login, no redirigir nuevamente
+      if (pathname !== "/loggin") {
+        //router.replace("/loggin"); // -->
       }
-    };
+    }
+  }, [loading, user, pathname, router]);
 
-    checkAuth();
-  }, []);
-
-  if (loading) {
+  if (!user) {
+    // si cambias la logica por la constante loding da el error que menciono por
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#235025" />
-        <Text style={styles.text}>Verificando autenticación...</Text>
+        <Text style={styles.text}>Inicia Sesion para esta Función...</Text>
       </View>
     );
   }
 
-  return isAuthenticated ? <>{children}</> : null;
+  //return user ? <>{children}</> : null;
+  return <>{children}</>;
 };
 
 const styles = StyleSheet.create({
