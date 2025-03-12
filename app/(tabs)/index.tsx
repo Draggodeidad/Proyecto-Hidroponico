@@ -225,7 +225,7 @@ export default function Monitoreo() {
           <View style={styles.circleContainer}>
             <View style={styles.circle}>
               <Text style={styles.dato}>
-                {ph !== null ? ph.toFixed(1) : "--"}
+              {typeof ph === 'number' ? ph.toFixed(1) : "--"}
               </Text>
             </View>
             <Text style={styles.circletext}>pH</Text>
