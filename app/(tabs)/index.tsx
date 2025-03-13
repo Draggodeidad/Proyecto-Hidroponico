@@ -225,7 +225,7 @@ export default function Monitoreo() {
           <View style={styles.circleContainer}>
             <View style={styles.circle}>
               <Text style={styles.dato}>
-              {typeof ph === 'number' ? ph.toFixed(1) : "--"}
+                {typeof ph === "number" ? ph.toFixed(1) : "--"}
               </Text>
             </View>
             <Text style={styles.circletext}>pH</Text>
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     color: "#235025",
   },
   monitoreo: {
-    backgroundColor: "#004d00",
+    backgroundColor: "#235025",
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   button: {
-    backgroundColor: "#235025",
+    backgroundColor: "#093710",
     padding: 10,
     borderRadius: 20,
     alignItems: "center",

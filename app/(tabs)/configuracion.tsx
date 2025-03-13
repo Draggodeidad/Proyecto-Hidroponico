@@ -40,7 +40,7 @@ export default function ConfiguracionScreen() {
       setUser(userSession);
       setLoading(false);
       if (userSession && userSession.uid) {
-        console.log("User UID:", userSession.uid);
+        //console.log("User UID:", userSession.uid);
         fetchFullName(userSession.uid);
       }
     };
