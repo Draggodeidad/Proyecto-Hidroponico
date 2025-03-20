@@ -2,39 +2,41 @@ import React, { useState, useEffect } from "react";
 import {
   Text,
   ScrollView,
-  StyleSheet,
   Image,
   View,
   TouchableOpacity,
-  Button,
   Platform,
   ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
 import { Toggle, ToggleProps, Input } from "@ui-kitten/components";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { getDatabase, ref, onValue, off } from "firebase/database";
+import { getDatabase, ref, onValue, off, set } from "firebase/database";
 import { database } from "../config/firebaseConfig";
 import { useAuth } from "../config/AuthContext";
 import ProtectedRoute from "../protectedRoute";
+import { styles } from "../styles/index.styles";
 
 export default function Monitoreo() {
   const [ph, setPh] = useState<number | null>(null);
   const [temperatura, setTemperatura] = useState<number | null>(null);
-  //const [humedad, setHumedad] = useState<number | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string>("");
   const [timeActive, setTimeActive] = useState<number | null>(null);
   const [tds, setTds] = useState<number | null>(null);
   const [turbidez, setTurbidez] = useState<number | null>(null);
+  const [pumpStatus, setPumpStatus] = useState<boolean>(false);
+  const [pumpScheduleActive, setPumpScheduleActive] = useState<boolean>(false);
+  const [pumpInterval, setPumpInterval] = useState<string>("");
 
   useEffect(() => {
     // Crear referencias usando la instancia de database importada
     const phRef = ref(database, "/monitoreo/ph");
     const temperaturaRef = ref(database, "/monitoreo/temperatura");
-    //const humedadRef = ref(database, "/monitoreo/humedad");
     const timeActiveRef = ref(database, "/monitoreo/ultima_actualizacion");
     const tdsRef = ref(database, "/monitoreo/tds");
     const turbidezRef = ref(database, "/monitoreo/turbidez");
+    const pumpStatusRef = ref(database, "/monitoreo/bomba_estado");
+    const pumpScheduleRef = ref(database, "/monitoreo/bomba_programada");
+    const pumpIntervalRef = ref(database, "/monitoreo/bomba_intervalo");
 
     // Suscribirse a cambios en el pH
     onValue(phRef, (snapshot) => {
@@ -70,12 +72,37 @@ export default function Monitoreo() {
       setTurbidez(turbidezValue);
       setLastUpdate(new Date().toLocaleTimeString());
     });
+
+    // Suscribirse a cambios en el estado de la bomba
+    onValue(pumpStatusRef, (snapshot) => {
+      const status = snapshot.val();
+      setPumpStatus(status);
+    });
+
+    // Suscribirse a cambios en el estado de programación de la bomba
+    onValue(pumpScheduleRef, (snapshot) => {
+      const schedule = snapshot.val();
+      setPumpScheduleActive(schedule);
+    });
+
+    // Suscribirse a cambios en el intervalo de la bomba
+    onValue(pumpIntervalRef, (snapshot) => {
+      const interval = snapshot.val();
+      if (interval !== null) {
+        setPumpInterval(interval.toString());
+      }
+    });
+
     // Limpiar suscripciones al desmontar el componente
     return () => {
       off(phRef);
       off(temperaturaRef);
-      //off(humedadRef);
       off(timeActiveRef);
+      off(tdsRef);
+      off(turbidezRef);
+      off(pumpStatusRef);
+      off(pumpScheduleRef);
+      off(pumpIntervalRef);
     };
   }, []);
 
@@ -85,43 +112,79 @@ export default function Monitoreo() {
     return `${value.toFixed(1)}${unit}`;
   };
 
-  // Lógica para el tiempo y el switch
-  const [time1, setTime1] = useState(new Date());
-  const [show1, setShow1] = useState(false);
-
-  const [time2, setTime2] = useState(new Date());
-  const [show2, setShow2] = useState(false);
-
-  const onChange1 = (event: any, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || time1;
-    setShow1(Platform.OS === "ios");
-    setTime1(currentDate);
-  };
-
-  const onChange2 = (event: any, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || time2;
-    setShow2(Platform.OS === "ios");
-    setTime2(currentDate);
-  };
-
-  const showTimepicker1 = () => {
-    setShow1(true);
-  };
-
-  const showTimepicker2 = () => {
-    setShow2(true);
-  };
-
-  const [value, setValue] = React.useState("");
-
+  // Estado y función para el toggle de la bomba
   const useToggleState = (initialState = false): ToggleProps => {
     const [checked, setChecked] = React.useState(initialState);
+
+    React.useEffect(() => {
+      // Inicializar el estado del toggle desde Firebase
+      const pumpStatusRef = ref(database, "/monitoreo/bomba_estado");
+      onValue(pumpStatusRef, (snapshot) => {
+        const status = snapshot.val();
+        if (status !== null) {
+          setChecked(status);
+        }
+      });
+
+      return () => off(pumpStatusRef);
+    }, []);
+
     const onCheckedChange = (isChecked: boolean): void => {
       setChecked(isChecked);
+      // Actualizar Firebase cuando cambia el toggle
+      const pumpStatusRef = ref(database, "/monitoreo/bomba_estado");
+      set(pumpStatusRef, isChecked);
     };
+
     return { checked, onChange: onCheckedChange };
   };
-  const successToggleState = useToggleState();
+
+  // Estado y función para el toggle de programación
+  const useScheduleToggleState = (initialState = false): ToggleProps => {
+    const [checked, setChecked] = React.useState(initialState);
+
+    React.useEffect(() => {
+      // Inicializar el estado del toggle desde Firebase
+      const scheduleRef = ref(database, "/monitoreo/bomba_programada");
+      onValue(scheduleRef, (snapshot) => {
+        const status = snapshot.val();
+        if (status !== null) {
+          setChecked(status);
+          setPumpScheduleActive(status);
+        }
+      });
+
+      return () => off(scheduleRef);
+    }, []);
+
+    const onCheckedChange = (isChecked: boolean): void => {
+      setChecked(isChecked);
+      setPumpScheduleActive(isChecked);
+      // Actualizar Firebase cuando cambia el toggle
+      const scheduleRef = ref(database, "/monitoreo/bomba_programada");
+      set(scheduleRef, isChecked);
+    };
+
+    return { checked, onChange: onCheckedChange };
+  };
+
+  const pumpToggleState = useToggleState();
+  const scheduleToggleState = useScheduleToggleState();
+
+  // Función para guardar la programación
+  const saveSchedule = () => {
+    const intervalMinutes = parseInt(pumpInterval) || 0;
+
+    // Guardar el intervalo en minutos
+    const intervalRef = ref(database, "/monitoreo/bomba_intervalo");
+    set(intervalRef, intervalMinutes);
+
+    // Establecer el estado activo de la programación
+    const scheduleActiveRef = ref(database, "/monitoreo/bomba_programada");
+    set(scheduleActiveRef, scheduleToggleState.checked);
+
+    alert("Programación de bomba guardada correctamente");
+  };
 
   const { user, loading } = useAuth();
 
@@ -149,78 +212,59 @@ export default function Monitoreo() {
         <Text style={styles.titulo}>Bombeo de Agua</Text>
         <View style={styles.data}>
           <View style={styles.row}>
-            <Text style={styles.textmoni}>Horario</Text>
-            <View style={styles.timePickerContainer}>
-              <Button
-                onPress={showTimepicker1}
-                title={time1.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-                color="green"
-              />
-              {show1 && (
-                <DateTimePicker
-                  testID="dateTimePicker1"
-                  value={time1}
-                  mode="time"
-                  is24Hour={false}
-                  display="spinner"
-                  onChange={onChange1}
-                  style={styles.picker}
-                  textColor="#fff"
-                />
-              )}
-            </View>
-            <Text style={styles.textmoni}>a</Text>
-            <Button
-              onPress={showTimepicker2}
-              title={time2.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              color="green"
-            />
-            {show2 && (
-              <DateTimePicker
-                testID="dateTimePicker2"
-                value={time2}
-                mode="time"
-                is24Hour={false}
-                display="spinner"
-                onChange={onChange2}
-                style={styles.picker}
-                textColor="#fff"
-              />
-            )}
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.textmoni}>Cada cuanto</Text>
+            <Text style={styles.textmoni}>Intervalo de ciclo (min)</Text>
             <View style={styles.inputContainer}>
               <Input
                 placeholder="Min"
-                value={value}
-                onChangeText={(nextValue) => setValue(nextValue)}
+                value={pumpInterval}
+                onChangeText={(nextValue) => setPumpInterval(nextValue)}
                 keyboardType="numeric"
                 style={styles.shortInput}
               />
-              <Text style={styles.textmoni}>Min</Text>
             </View>
           </View>
 
           <View style={styles.row}>
             <View style={styles.itemcont}>
-              <Text style={styles.textmoni}>Activar</Text>
+              <Text style={styles.textmoni}>Programación Activa</Text>
             </View>
-            <Toggle status="success" {...successToggleState} />
+            <Toggle status="success" {...scheduleToggleState} />
           </View>
+
+          <View style={styles.row}>
+            <View style={styles.itemcont}>
+              <Text style={styles.textmoni}>Encender/Apagar Manualmente</Text>
+            </View>
+            <Toggle status="success" {...pumpToggleState} />
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.subtitulo}>
+              Estado actual: {pumpStatus ? "Encendida" : "Apagada"}
+            </Text>
+            <View
+              style={[
+                styles.statusIndicator,
+                {
+                  backgroundColor: pumpStatus ? "#4CAF50" : "#F44336",
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  marginLeft: 10,
+                },
+              ]}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={saveSchedule}>
+            <Text style={styles.buttonText}>Guardar Programación</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.monitoreo}>
         <Text style={styles.titulo}>Monitoreo</Text>
-        <Text style={styles.titulo}>Tiempo Activo: {timeActive} </Text>
+        <Text style={styles.titulo}>Última actualización: {lastUpdate}</Text>
         <View style={styles.datos}>
           <View style={styles.circleContainer}>
             <View style={styles.circle}>
@@ -252,12 +296,12 @@ export default function Monitoreo() {
                 {turbidez !== null ? turbidez.toFixed(1) : "--"}
               </Text>
             </View>
-            <Text style={styles.circletext}>Turdibez</Text>
+            <Text style={styles.circletext}>Turbidez</Text>
           </View>
         </View>
       </View>
 
-      <Text style={styles.help}>Necesitas ayuda?</Text>
+      <Text style={styles.help}>¿Necesitas ayuda?</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => router.push("/inteligenciaArtificial")}
@@ -267,126 +311,5 @@ export default function Monitoreo() {
     </ScrollView>
   );
 
-  return (
-    // Envolver Componente
-    <ProtectedRoute>{content}</ProtectedRoute>
-  );
+  return <ProtectedRoute>{content}</ProtectedRoute>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    overflow: "hidden",
-  },
-  image: {
-    width: "100%",
-    height: 200,
-    resizeMode: "cover",
-    marginBottom: 25,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: "#235025",
-  },
-  monitoreo: {
-    backgroundColor: "#235025",
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  titulo: {
-    color: "#fafafa",
-    fontSize: 18,
-    marginBottom: 20,
-    fontWeight: "semibold",
-    //opacity: 0.5,
-  },
-  data: {
-    width: "100%",
-  },
-  itemcont: {},
-  textmoni: {
-    color: "#fafafa",
-    fontSize: 16,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 15,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  shortInput: {
-    width: 68,
-    height: 40,
-    marginRight: 5,
-  },
-  timePickerContainer: {
-    flexDirection: "row",
-    marginLeft: 90,
-    alignItems: "center",
-  },
-  picker: {
-    width: 100,
-    backgroundColor: "transparent",
-  },
-  datos: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  circleContainer: {
-    alignItems: "center",
-  },
-  circle: {
-    backgroundColor: "#000",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dato: {
-    color: "#fafafa",
-    fontSize: 14,
-    textAlign: "center",
-  },
-  circletext: {
-    color: "#fafafa",
-    fontSize: 16,
-    marginTop: 10,
-  },
-  help: {
-    color: "#000",
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "left",
-    marginLeft: 10,
-    marginTop: 5,
-  },
-  button: {
-    backgroundColor: "#093710",
-    padding: 10,
-    borderRadius: 20,
-    alignItems: "center",
-    margin: 10,
-  },
-  buttonText: {
-    color: "#ffffff",
-    fontSize: 16,
-  },
-});
