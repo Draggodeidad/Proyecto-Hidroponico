@@ -15,6 +15,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useKeyboard } from "@react-native-community/hooks";
 import Markdown from "react-native-markdown-display";
 import ProtectedRoute from "../protectedRoute";
+import { useMonitoring } from "../config/MonitoringContext";
+import { useLocalSearchParams } from "expo-router";
 
 export default function inteligenciaScreen() {
   const keyboard = useKeyboard();
@@ -22,18 +24,65 @@ export default function inteligenciaScreen() {
   const [userMessage, setUserMessage] = useState(""); // Mensaje del usuario
   const [aiResponse, setAiResponse] = useState(""); // Respuesta de la IA
   const [loading, setLoading] = useState(false);
+  
+  // Get monitoring data
+  const { monitoringData } = useMonitoring();
+  
+  // Get route params
+  const params = useLocalSearchParams();
+  const [cropContext, setCropContext] = useState<any>(null);
+  
+  // Parse crop context from params if available
+  useEffect(() => {
+    if (params.cropContext) {
+      try {
+        const parsedContext = JSON.parse(params.cropContext as string);
+        setCropContext(parsedContext);
+        
+        // Auto-generate a question if coming from crop page
+        if (parsedContext.cropType) {
+          const autoQuestion = `¿Cómo puedo cultivar ${parsedContext.cropTitle || parsedContext.cropType} con mis condiciones actuales?`;
+          setInput(autoQuestion);
+          // Don't auto-send here as it can cause infinite loops
+        }
+      } catch (e) {
+        console.error("Error parsing crop context:", e);
+      }
+    }
+  }, [params.cropContext]); // Only depend on params.cropContext, not the entire params object
 
-  async function sendMessage() {
-    if (!input.trim()) {
+  async function sendMessage(messageOverride?: string) {
+    const messageToSend = messageOverride || input;
+    
+    if (!messageToSend.trim()) {
       return;
     }
 
-    setUserMessage(input);
+    setUserMessage(messageToSend);
     setLoading(true);
     setAiResponse(""); // Limpiar respuesta anterior
 
-    const messageToSend = input;
-    setInput("");
+    if (!messageOverride) {
+      setInput("");
+    }
+
+    // Create a context string with the monitoring data
+    const monitoringContextStr = `
+Datos actuales del sistema hidropónico:
+- pH: ${monitoringData.ph !== null ? monitoringData.ph.toFixed(1) : 'No disponible'}
+- Temperatura: ${monitoringData.temperatura !== null ? `${monitoringData.temperatura.toFixed(1)}°C` : 'No disponible'}
+- TDS: ${monitoringData.tds !== null ? monitoringData.tds.toFixed(1) : 'No disponible'}
+- Turbidez: ${monitoringData.turbidez !== null ? monitoringData.turbidez.toFixed(1) : 'No disponible'}
+- Tiempo activo del sistema: ${monitoringData.timeActive !== null ? monitoringData.timeActive : 'No disponible'}
+`;
+
+    // Add crop context if available
+    const cropContextStr = cropContext ? `
+Información del cultivo:
+- Tipo: ${cropContext.cropType || 'No especificado'}
+- Nombre: ${cropContext.cropTitle || 'No especificado'}
+- Descripción: ${cropContext.cropDescription || 'No disponible'}
+` : '';
 
     try {
       const response = await fetch(
@@ -49,10 +98,12 @@ export default function inteligenciaScreen() {
             model: "deepseek/deepseek-chat:free",
             messages: [
               {
+                role: "system",
+                content: "Eres un experto en agricultura hidropónica. Utiliza los datos de monitoreo y la información del cultivo proporcionados para dar respuestas más precisas y personalizadas."
+              },
+              {
                 role: "user",
-                content:
-                  "Responde la siguiente solicitud como si fueras un experto en agricultura: " +
-                  input,
+                content: `${monitoringContextStr}${cropContextStr}\n\nConsulta del usuario: ${messageToSend}`
               },
             ],
           }),
@@ -136,10 +187,6 @@ export default function inteligenciaScreen() {
 
           {/* Aqui va el input de texto */}
           <View style={styles.inputContainer}>
-            {/* Icono subir archivos 
-        <TouchableOpacity>
-          <Ionicons name="add" size={24} color="black" />
-        </TouchableOpacity>*/}
 
             {/* Input */}
             <TextInput
@@ -151,7 +198,7 @@ export default function inteligenciaScreen() {
             />
 
             {/* Icono de Enviar */}
-            <TouchableOpacity onPress={sendMessage}>
+            <TouchableOpacity onPress={() => sendMessage()}>
               <Ionicons
                 name="send"
                 size={24}
