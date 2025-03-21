@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Text,
   ScrollView,
@@ -15,6 +15,7 @@ import { database } from "../config/firebaseConfig";
 import { useAuth } from "../config/AuthContext";
 import ProtectedRoute from "../protectedRoute";
 import { styles } from "../styles/index.styles";
+import { useMonitoring } from "../config/MonitoringContext";
 
 export default function Monitoreo() {
   const [ph, setPh] = useState<number | null>(null);
@@ -26,6 +27,8 @@ export default function Monitoreo() {
   const [pumpStatus, setPumpStatus] = useState<boolean>(false);
   const [pumpScheduleActive, setPumpScheduleActive] = useState<boolean>(false);
   const [pumpInterval, setPumpInterval] = useState<string>("");
+  const { updateMonitoringData } = useMonitoring();
+  const updateData = useCallback(updateMonitoringData, []);
 
   useEffect(() => {
     // Crear referencias usando la instancia de database importada
@@ -38,7 +41,43 @@ export default function Monitoreo() {
     const pumpScheduleRef = ref(database, "/monitoreo/bomba_programada");
     const pumpIntervalRef = ref(database, "/monitoreo/bomba_intervalo");
 
-    // Suscribirse a cambios en el pH
+    const updateLastUpdate = () => setLastUpdate(new Date().toLocaleTimeString());
+
+    // Actualizar los datos cada 10 segundos
+
+    const subscribeToSensor = (sensorRef, setState, key) => {
+      return onValue(sensorRef, (snapshot) => {
+        const value = snapshot.val();
+        setState(value);
+        updateData({ [key]: value });
+        updateLastUpdate();
+      });
+    };
+
+    const unsubscribePh = subscribeToSensor(phRef, setPh, "ph");
+    const unsubscribeTemp = subscribeToSensor(temperaturaRef, setTemperatura, "temperatura");
+    const unsubscribeTime = subscribeToSensor(timeActiveRef, setTimeActive, "timeActive");
+    const unsubscribeTds = subscribeToSensor(tdsRef, setTds, "tds");
+    const unsubscribeTurbidez = subscribeToSensor(turbidezRef, setTurbidez, "turbidez");
+    const unsubscribePumpStatus = subscribeToSensor(pumpStatusRef, setPumpStatus, "bomba_estado");
+    const unsubscribePumpSchedule = subscribeToSensor(pumpScheduleRef, setPumpScheduleActive, "bomba_programada");
+    const unsubscribePumpInterval = subscribeToSensor(pumpIntervalRef, (value) => {
+      if (value !== null) setPumpInterval(value.toString());
+    }, "bomba_intervalo");
+
+    return () => {
+      off(phRef, "value", unsubscribePh);
+      off(temperaturaRef, "value", unsubscribeTemp);
+      off(timeActiveRef, "value", unsubscribeTime);
+      off(tdsRef, "value", unsubscribeTds);
+      off(turbidezRef, "value", unsubscribeTurbidez);
+      off(pumpStatusRef, "value", unsubscribePumpStatus);
+      off(pumpScheduleRef, "value", unsubscribePumpSchedule);
+      off(pumpIntervalRef, "value", unsubscribePumpInterval);
+    };
+  }, [updateData]);
+
+/*     // Suscribirse a cambios en el pH
     onValue(phRef, (snapshot) => {
       const phValue = snapshot.val();
       setPh(phValue);
@@ -71,7 +110,7 @@ export default function Monitoreo() {
       const turbidezValue = snapshot.val();
       setTurbidez(turbidezValue);
       setLastUpdate(new Date().toLocaleTimeString());
-    });
+    }); 
 
     // Suscribirse a cambios en el estado de la bomba
     onValue(pumpStatusRef, (snapshot) => {
@@ -105,6 +144,7 @@ export default function Monitoreo() {
       off(pumpIntervalRef);
     };
   }, []);
+  */
 
   // Función para mostrar el valor con la unidad correspondiente
   const getDisplayValue = (value: number | null, unit: string) => {

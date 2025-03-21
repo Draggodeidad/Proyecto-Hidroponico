@@ -12,6 +12,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { AuthProvider } from "./config/AuthContext"; // Importa el AuthProvider
+import { MonitoringProvider } from './config/MonitoringContext';
 
 // UI Kitten
 import { ApplicationProvider } from "@ui-kitten/components";
@@ -37,6 +38,7 @@ export default function RootLayout() {
   }
 
   return (
+    <MonitoringProvider>
     <AuthProvider>
       <ApplicationProvider {...eva} theme={eva.light}>
         <ThemeProvider
@@ -234,5 +236,6 @@ export default function RootLayout() {
         </ThemeProvider>
       </ApplicationProvider>
     </AuthProvider>
+    </MonitoringProvider>
   );
 }
