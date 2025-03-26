@@ -86,7 +86,7 @@ export default function ConfiguracionScreen() {
   };
   const { logout } = useAuth();
   const handlePress = () => {
-    const url = "hydrosmartdocs.netlify.app";
+    const url = "https://hydrosmartdocs.netlify.app/";
     Linking.openURL(url).catch((err) =>
       console.error("An error occurred", err)
     );
