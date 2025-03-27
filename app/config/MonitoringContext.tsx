@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface MonitoringData {
   ph: number | null;
@@ -28,16 +28,24 @@ const MonitoringContext = createContext<MonitoringContextType>(defaultValue);
 
 export const useMonitoring = () => useContext(MonitoringContext);
 
-export const MonitoringProvider: React.FC<{children: ReactNode}> = ({ children }) => {
-  const [monitoringData, setMonitoringData] = useState<MonitoringData>(defaultValue.monitoringData);
+export const MonitoringProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [monitoringData, setMonitoringData] = useState<MonitoringData>(
+    defaultValue.monitoringData
+  );
 
   const updateMonitoringData = (data: Partial<MonitoringData>) => {
-    setMonitoringData(prev => ({ ...prev, ...data }));
+    setMonitoringData((prev) => ({ ...prev, ...data }));
   };
 
   return (
-    <MonitoringContext.Provider value={{ monitoringData, updateMonitoringData }}>
+    <MonitoringContext.Provider
+      value={{ monitoringData, updateMonitoringData }}
+    >
       {children}
     </MonitoringContext.Provider>
   );
 };
+
+export default MonitoringContext;

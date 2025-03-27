@@ -41,11 +41,16 @@ export default function Monitoreo() {
     const pumpScheduleRef = ref(database, "/monitoreo/bomba_programada");
     const pumpIntervalRef = ref(database, "/monitoreo/bomba_intervalo");
 
-    const updateLastUpdate = () => setLastUpdate(new Date().toLocaleTimeString());
+    const updateLastUpdate = () =>
+      setLastUpdate(new Date().toLocaleTimeString());
 
     // Actualizar los datos cada 10 segundos
 
-    const subscribeToSensor = (sensorRef, setState, key) => {
+    const subscribeToSensor = (
+      sensorRef: any,
+      setState: (value: any) => void,
+      key: string
+    ) => {
       return onValue(sensorRef, (snapshot) => {
         const value = snapshot.val();
         setState(value);
@@ -55,15 +60,39 @@ export default function Monitoreo() {
     };
 
     const unsubscribePh = subscribeToSensor(phRef, setPh, "ph");
-    const unsubscribeTemp = subscribeToSensor(temperaturaRef, setTemperatura, "temperatura");
-    const unsubscribeTime = subscribeToSensor(timeActiveRef, setTimeActive, "timeActive");
+    const unsubscribeTemp = subscribeToSensor(
+      temperaturaRef,
+      setTemperatura,
+      "temperatura"
+    );
+    const unsubscribeTime = subscribeToSensor(
+      timeActiveRef,
+      setTimeActive,
+      "timeActive"
+    );
     const unsubscribeTds = subscribeToSensor(tdsRef, setTds, "tds");
-    const unsubscribeTurbidez = subscribeToSensor(turbidezRef, setTurbidez, "turbidez");
-    const unsubscribePumpStatus = subscribeToSensor(pumpStatusRef, setPumpStatus, "bomba_estado");
-    const unsubscribePumpSchedule = subscribeToSensor(pumpScheduleRef, setPumpScheduleActive, "bomba_programada");
-    const unsubscribePumpInterval = subscribeToSensor(pumpIntervalRef, (value) => {
-      if (value !== null) setPumpInterval(value.toString());
-    }, "bomba_intervalo");
+    const unsubscribeTurbidez = subscribeToSensor(
+      turbidezRef,
+      setTurbidez,
+      "turbidez"
+    );
+    const unsubscribePumpStatus = subscribeToSensor(
+      pumpStatusRef,
+      setPumpStatus,
+      "bomba_estado"
+    );
+    const unsubscribePumpSchedule = subscribeToSensor(
+      pumpScheduleRef,
+      setPumpScheduleActive,
+      "bomba_programada"
+    );
+    const unsubscribePumpInterval = subscribeToSensor(
+      pumpIntervalRef,
+      (value) => {
+        if (value !== null) setPumpInterval(value.toString());
+      },
+      "bomba_intervalo"
+    );
 
     return () => {
       off(phRef, "value", unsubscribePh);
@@ -77,7 +106,7 @@ export default function Monitoreo() {
     };
   }, [updateData]);
 
-/*     // Suscribirse a cambios en el pH
+  /*     // Suscribirse a cambios en el pH
     onValue(phRef, (snapshot) => {
       const phValue = snapshot.val();
       setPh(phValue);
