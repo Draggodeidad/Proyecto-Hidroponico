@@ -86,7 +86,7 @@ export default function ConfiguracionScreen() {
   };
   const { logout } = useAuth();
   const handlePress = () => {
-    const url = "https://www.youtube.com/";
+    const url = "https://hydrosmartdocs.netlify.app/";
     Linking.openURL(url).catch((err) =>
       console.error("An error occurred", err)
     );
@@ -163,24 +163,6 @@ export default function ConfiguracionScreen() {
               <FontAwesome name="file-text" size={24} color="#235025" />
             </View>
             <Text style={styles.menuText}>Política de privacidad</Text>
-            <FontAwesome
-              name="angle-right"
-              size={24}
-              color="#90a955"
-              style={styles.arrowIcon}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Preferencias */}
-        <View style={styles.menuItemWrapper}>
-          <TouchableOpacity
-            onPress={() => router.push("/preferencias")}
-            style={styles.menuItem}
-          >
-            <View style={styles.menuIconContainer}>
-              <FontAwesome name="cog" size={24} color="#235025" />
-            </View>
-            <Text style={styles.menuText}>Preferencias</Text>
             <FontAwesome
               name="angle-right"
               size={24}
