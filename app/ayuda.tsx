@@ -41,6 +41,11 @@ export default function AyudaScreen() {
     const url = "https://www.x.com/";
     Linking.openURL(url).catch((err) => console.error(err));
   };
+  const handeleForm = () => {
+    const url =
+      "https://docs.google.com/forms/d/e/1FAIpQLSftDXnEm_oh04Jor72uAfKnu1k-eLlGKyV4NERD98IaNlMdBg/viewform?usp=header";
+    Linking.openURL(url).catch((err) => console.error(err));
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView>
@@ -127,6 +132,7 @@ export default function AyudaScreen() {
           <Button
             style={styles.reportButton}
             status="danger"
+            onPress={handeleForm}
             accessoryLeft={(props) => (
               <MaterialIcons name="report-problem" size={24} color="white" />
             )}
